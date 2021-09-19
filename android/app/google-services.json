@@ -1,0 +1,46 @@
+{
+  "project_info": {
+    "project_number": "185063246347",
+    "project_id": "afg-shipping",
+    "storage_bucket": "afg-shipping.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:185063246347:android:938c0385a74c23a0a0950e",
+        "android_client_info": {
+          "package_name": "com.afgglobalshipping"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "185063246347-4vj49pduacqfb1u769s1a1lia1htqibj.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCqz_cajDiZ7GGre4jMoevuyvMblJefDu0"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "185063246347-4vj49pduacqfb1u769s1a1lia1htqibj.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "185063246347-1pq9usptancibfhujk7k1kco0ai8ql9s.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.AFGGlobalShippings"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
