@@ -249,7 +249,7 @@ PODS:
     - React-Core
   - react-native-image-compressor (0.0.1):
     - React
-  - react-native-image-picker (3.3.2):
+  - react-native-image-picker (3.8.1):
     - React-Core
   - react-native-image-resizer (1.4.4):
     - React-Core
@@ -581,17 +581,17 @@ SPEC CHECKSUMS:
   React-jsi: a0418934cf48f25b485631deb27c64dc40fb4c31
   React-jsiexecutor: 93bd528844ad21dc07aab1c67cb10abae6df6949
   React-jsinspector: 58aef7155bc9a9683f5b60b35eccea8722a4f53a
-  react-native-cameraroll: 9d2b7c1707204d2040d2812f960c6cebdbd9f670
-  react-native-document-picker: df3652604cb92ade18e3e280a562f23b4580f4bf
+  react-native-cameraroll: 60ba0068826eab1c8d43146191bafd4363ea58a7
+  react-native-document-picker: 20f652c2402d3ddc81f396d8167c3bd978add4a2
   react-native-image-compressor: 99112de1c9434786bc8b9915008b9ba8785669b4
-  react-native-image-picker: 5b2f1ea1f9230b131abbfb8a4aa1eb209aba9ed9
-  react-native-image-resizer: b08cf4b346a7bbfe82eb7a535434c58969e729c7
-  react-native-netinfo: 52cf0ee8342548a485e28f4b09e56b477567244d
+  react-native-image-picker: 31971f6184e7c1dcb4fc1f122e1ba2c3fb11ef1e
+  react-native-image-resizer: 13ac4af788f88af36d0353a1324401ebabd04fe4
+  react-native-netinfo: 30fb89fa913c342be82a887b56e96be6d71201dd
   react-native-pdf: 4b5a9e4465a6a3b399e91dc4838eb44ddf716d1f
-  react-native-progress-bar-android: ce95a69f11ac580799021633071368d08aaf9ad8
-  react-native-progress-view: 5816e8a6be812c2b122c6225a2a3db82d9008640
-  react-native-safe-area-context: 86612d2c9a9e94e288319262d10b5f93f0b395f5
-  react-native-version-info: 64f0f0bf3da6316298f9cd6085d50ba3a992d0c7
+  react-native-progress-bar-android: be43138ab7da30d51fc038bafa98e9ed594d0c40
+  react-native-progress-view: 21b1e29e70c7559c16c9e0a04c4adc19fce6ede2
+  react-native-safe-area-context: b6e0e284002381d2ff29fa4fff42b4d8282e3c94
+  react-native-version-info: 36490da17d2c6b5cc21321c70e433784dee7ed0b
   React-RCTActionSheet: 89a0ca9f4a06c1f93c26067af074ccdce0f40336
   React-RCTAnimation: 1bde3ecc0c104c55df246eda516e0deb03c4e49b
   React-RCTBlob: a97d378b527740cc667e03ebfa183a75231ab0f0
@@ -604,10 +604,10 @@ SPEC CHECKSUMS:
   ReactCommon: 73d79c7039f473b76db6ff7c6b159c478acbbb3b
   ReactNativeCameraKit: 5026c5884617eab92b096b62262eec2bbf9eb647
   rn-fetch-blob: f065bb7ab7fb48dd002629f8bdcb0336602d3cba
-  RNCAsyncStorage: cb9a623793918c6699586281f0b51cbc38f046f9
-  RNCMaskedView: f5c7d14d6847b7b44853f7acb6284c1da30a3459
+  RNCAsyncStorage: b03032fdbdb725bea0bd9e5ec5a7272865ae7398
+  RNCMaskedView: 5a8ec07677aa885546a0d98da336457e2bea557f
   RNCPicker: 77183d9b1cd80ae55505322f8ad09ba0036e29ba
-  RNDeviceInfo: 54401b60514387f9120ab8265be5ed9103d842b9
+  RNDeviceInfo: 921a809eaf9de79645a24de1c6ca90db6cb91786
   RNFBApp: a9af8372c9c2b2135ffa78817fd2d8baf3ee632e
   RNFBMessaging: 643ec4102ee0d780f928718c2632bb1e90487f04
   RNFilesShare: 8c6275c200d7ed46aa204e31535acbc354a5a01a
@@ -616,11 +616,11 @@ SPEC CHECKSUMS:
   RNReanimated: e03f7425cb7a38dcf1b644d680d1bfc91c3337ad
   RNScreens: 45c457af3d2ee9e08fc01e70da87e653d46b1198
   RNShare: 755de6bac084428f8fd8fb54c376f126f40e560c
-  RNSnackbar: 3d8ca64e917b2a4510a626f10b18ce47a4273313
+  RNSnackbar: 86092381dba7a0ed9fbd7acdb82ebbd5bfd26372
   RNVectorIcons: bc69e6a278b14842063605de32bec61f0b251a59
   TOCropViewController: 3105367e808b7d3d886a74ff59bf4804e7d3ab38
   Yoga: 4bd86afe9883422a7c4028c00e34790f560923d6
 
 PODFILE CHECKSUM: 235f7e1c435760779d67b2d17720bf8dc8c84589
 
-COCOAPODS: 1.10.1
+COCOAPODS: 1.11.2
