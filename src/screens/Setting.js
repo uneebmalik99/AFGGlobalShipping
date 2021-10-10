@@ -312,8 +312,8 @@ onPress={()=>{navigation.navigate('Faqs')}}
 </ScrollView>
 
 <View style={{justifyContent:'center',  paddingVertical:10,backgroundColor:'white' }}>
-  <Text style={{alignSelf:'center'}}>Made by <Text style={{color: 'blue'}}
-      onPress={() => Linking.openURL('https://www.fiverr.com/uneeb_malik99')}>
+  <Text style={{alignSelf:'center'}}>Developed by <Text style={{color: 'blue'}}
+      onPress={() => Linking.openURL('https://www.upwork.com/freelancers/~014512981757da15ed')}>
   Uneeb Malik
 </Text>
  </Text>
