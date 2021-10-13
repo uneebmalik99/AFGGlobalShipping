@@ -52,6 +52,7 @@ const CarEditimages = ({route, navigation }) => {
     const[delimg , setdelimg] = useState([])
     const [spinner , setspinner] = useState(false)
 
+ 
 
 
     const showSnackbarMessage = () => {
@@ -618,8 +619,8 @@ return (
               alignItems:'baseline',
               paddingHorizontal:15,
             }}>
-     {/* <TouchableOpacity
-                            onPress={() => openCamera()}
+     <TouchableOpacity
+                            onPress={() => {TakePhoto()}}
 // onPress={()=> captureImage}
                   style={{
                     borderRadius: 10,
@@ -640,7 +641,7 @@ return (
                     }}>
                     Open Camera
                   </Text>
-                </TouchableOpacity> */}
+                </TouchableOpacity>
 
 
 

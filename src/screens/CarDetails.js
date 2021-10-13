@@ -1051,8 +1051,7 @@ style={{backgroundColor:'red', alignSelf:'flex-start', justifyContent:'center',}
   onPress={()=>{ 
     
     // selectOneFile();
-     navigation.push('CarEditimages2',{images:img,vehicleid:datapre,})
-  }}
+     navigation.push('CarEditimages2',{images:img,vehicleid:datapre,} ) , setvehicleDetails([]) }}
 
 >
 

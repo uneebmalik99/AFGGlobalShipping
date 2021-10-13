@@ -14,7 +14,8 @@ import {
   TouchableOpacity,
   Modal,
   Image,
-  Dimensions
+  Dimensions,
+  Platform
 } from 'react-native';
 import Icon from 'react-native-vector-icons/Entypo';
 import AppColors from '../Colors/AppColors';
@@ -30,8 +31,11 @@ import RNFetchBlob from 'rn-fetch-blob';
 import Snackbar from 'react-native-snackbar';
 import Spinner from 'react-native-loading-spinner-overlay';
 import AppUrlCollection from '../UrlCollection/AppUrlCollection';
-import DocumentPicker from 'react-native-document-picker';
-import ImagePicker from 'react-native-image-picker';
+import * as ImagePicker from "react-native-image-picker"
+import ImageResizer from 'react-native-image-resizer';
+
+import ImageCropPicker from 'react-native-image-crop-picker';
+import DocumentPicker from 'react-native-document-picker'
 // import ImagePicker from 'react-native-image-crop-picker';
 
 
@@ -45,7 +49,7 @@ const CarEditimages2 = ({route, navigation }) => {
 
 
    
-    const {  images ,vehicleid} = route.params;
+    const { images ,vehicleid} = route.params;
     const [EditImages , setEditImages] = useState(images)
     const [opener , setopener] = useState(false)
     const[imagesEditable , setimagesEditable] = useState(images)
@@ -53,9 +57,217 @@ const CarEditimages2 = ({route, navigation }) => {
     const[delimg , setdelimg] = useState([])
     const [spinner , setspinner] = useState(false)
 
+  // For Android / iphone  Camera  
+  const TakePhoto = async (type) => {
+      let options = {
+        quality: 0.6,
+        videoQuality: 'low',
+        durationLimit: 30, //Video max duration in seconds
+        saveToPhotos: true,
+      };
+      if(Platform.OS == 'ios'){
+        ImagePicker.launchCamera(options, (response) => {
+          console.log('Response = ', response);
+  
+          if (response.didCancel) {
+            // alert('User cancelled camera picker');
+            return;
+          } else if (response.errorCode == 'camera_unavailable') {
+            alert('Camera not available on device');
+            return;
+          } else if (response.errorCode == 'permission') {
+            alert('Permission not satisfied');
+            return;
+          } else if (response.errorCode == 'others') {
+            alert(response.errorMessage);
+            return;
+          }else{
+            img.push(response)
+            setEditImages(old => [...old, ...img]);
+            setimg([])
+            value.append('vehicle_image[]',{uri:response.uri,
+              name:response.fileName,
+              type:response.type
+            } )
+            console.log(response);
+            setopener(false)
+
+             
+      
+          }
+
+        });
+      }else{
+        let isCameraPermitted = await requestCameraPermission();
+      let isStoragePermitted = await requestExternalWritePermission();
+      if (isCameraPermitted && isStoragePermitted) {
+        ImagePicker.launchCamera(options, (response) => {
+          console.log('Response = ', response);
+  
+          if (response.didCancel) {
+            // alert('User cancelled camera picker');
+            return;
+          } else if (response.errorCode == 'camera_unavailable') {
+            alert('Camera not available on device');
+            return;
+          } else if (response.errorCode == 'permission') {
+            alert('Permission not satisfied');
+            return;
+          } else if (response.errorCode == 'others') {
+            alert(response.errorMessage);
+            return;
+          }else{
+            
+            img.push(response)
+            setEditImages(old => [...old, ...img]);
+            setimg([])
+            value.append('vehicle_image[]',{uri:response.uri,
+              name:response.fileName,
+              type:response.type
+            } )
+
+            console.log(response);
+            setopener(false)
+
+          }
+        
+      
+        });
+      }
+    }
+      
+     
+      
+  };
+
+  // For iphone  Image Library 
+  const chooseFile = async() => {
+  
+    ImageCropPicker.openPicker({
+          multiple: true,
+          compressImageQuality:0.6,
+          saveToPhotos: true
+        }).then(images1 => {
 
 
-    const showSnackbarMessage = () => {
+          for( i =0; i< images1.length; i++){
+
+            let temp = {} ;
+           
+            temp.name = images1[i].filename;
+            temp.size = images1[i].size;
+            temp.type = images1[i].mime;
+            temp.url = images1[i].path;
+            // console.log(images1[i].size);
+            // images.push(temp)
+            // alert(JSON.stringify(images1[i]))
+            img.push(images1[i])
+            setEditImages(old => [...old, ...img]);
+            setimg([])
+            value.append('vehicle_image[]',{uri:images1[i].path ,
+              name:images1[i].filename,
+              type:images1[i].mime
+                });
+
+            console.log(images1[i]);
+          }  
+       
+          setopener(false)
+    //       img.push(image)
+    // setEditImages(old => [...old, ...img]);
+    // setimg([])
+    // console.log(image);
+      console.log(JSON.stringify(images1));
+          var i ;
+          // for( i =0; i< images1.length; i++){
+  
+          
+  
+         
+          // }      
+  
+        });
+  
+
+  };
+
+  // For Android  Image Library 
+  const selectFile3 = async () => {
+    try {
+      const results = await DocumentPicker.pickMultiple({
+        type: [DocumentPicker.types.images],
+        
+        //There can me more options as well find above
+      });
+  
+  console.log('-----'+JSON.stringify(results));
+  var i ;
+
+
+        for( i =0; i< results.length ; i++){
+          img.push(results[i])
+          setEditImages(old => [...old, ...img]);
+          setimg([])
+// alert(JSON.stringify(res))
+// console.log(JSON.stringify(res));
+ImageResizer.createResizedImage(results[i].uri, 600, 600,  'PNG',0.6, 0 )
+  .then(response => {
+      console.log(JSON.stringify(response));
+
+      value.append('vehicle_image[]',{uri:response.uri ,
+        name:response.name,
+        // type:results[i].type
+        type:'image/png'
+          });
+    // response.uri is the URI of the new image that can now be displayed, uploaded...
+    // response.path is the path of the new image
+    // response.name is the name of the new image with the extension
+    // response.size is the size of the new image
+  })
+  .catch(err => {
+    // Oops, something went wrong. Check that the filename is correct and
+    // inspect err to get more details.
+  });
+          // img.push(res)
+          // setEditImages(old => [...old, ...img]);
+          // setimg([])
+          // value.append('vehicle_image[]',{uri:images1[i].path ,
+          //   name:images1[i].filename,
+          //   type:images1[i].mime
+          //     });  
+                      // alert(JSON.stringify(temp))
+
+      // var value = new FormData();
+    
+      //    value.append('file',res);
+      }
+
+      setopener(false)
+
+  
+    } catch (err) {
+      setspinner(false)
+  
+      //Handling any exception (If any)
+      if (DocumentPicker.isCancel(err)) {
+        //setopener(false)
+  
+        //If user canceled the document selection
+        // alert('Canceled from multiple doc picker');
+      } else {
+       // setopener(false)
+  
+        //For Unknown Error
+        alert('Unknown Error: ' + JSON.stringify(err));
+        throw err;
+      }
+    }
+  
+  
+  };
+
+
+  const showSnackbarMessage = () => {
       setTimeout(() => {
         Snackbar.show({
           backgroundColor: '#008B8B',
@@ -63,9 +275,9 @@ const CarEditimages2 = ({route, navigation }) => {
           duration: Snackbar.LENGTH_SHORT,
         });
       }, 250);
-    };
+  };
 
-const handleRemoveItem = e => {
+  const handleRemoveItem = e => {
 
   const newArr = [...EditImages];
   newArr.splice(newArr.findIndex(item => item === e), 1)
@@ -77,11 +289,9 @@ const handleRemoveItem = e => {
 
   console.log(delimg.toString());
   }
-}
+  }
 
-
-
-const requestCameraPermission = async () => {
+  const requestCameraPermission = async () => {
     if (Platform.OS === 'android') {
       try {
         const granted = await PermissionsAndroid.request(
@@ -284,115 +494,9 @@ const requestCameraPermission = async () => {
 
 
 // };
-const selectFile3 = async () => {
-  // setopener(false)
-    try {
-      const results = await DocumentPicker.pickMultiple({
-        type: [DocumentPicker.types.images],
-        
-        //There can me more options as well find above
-      });
+ 
   
-  console.log(results);
-      for (const res of results) {
-        //Printing the log realted to the file
-        console.log('res : ' + JSON.stringify(res));
-        console.log('URI : ' + res.uri);
-        console.log('Type : ' + res.type);
-        
-        
-        console.log('File Name : ' + res.name);
-        console.log('File Size : ' + res.size);
-
-        value.append('vehicle_image[]',res )
-console.log('value is -----'+JSON.stringify(value));
-        // 3286642
-      // await  ImageResizer.createResizedImage(res.uri ,640  , 640,'JPEG' , 0.4, 0,)
-      //         .then(response => {
-      //           console.log('imgresize======'+JSON.stringify(response));
-      //           value.append('vehicle_image[]',response )
-      //           // setEditImages(old => [...old, ...img]);
-        
-        
-      //           // response.uri is the URI of the new image that can now be displayed, uploaded...
-      //           // response.path is the path of the new image
-      //           // response.name is the name of the new image with the extension
-      //           // response.size is the size of the new image
-      //         })
-      //         .catch(err => {
-      //           console.log('imgresize error'+err);
-        
-      //           // Oops, something went wrong. Check that the filename is correct and
-      //           // inspect err to get more details.
-      //         });
-  //       const result = await ImageCompressor.compress(res, {
-  //         quality:0.6,
-  // })
-  
-  // res : {"size":3319189,"name":"20210327_095749.jpg","fileCopyUri":"content://com.android.providers.media.documents/document/image%3A2616","type":"image/jpeg","uri":"content://com.android.providers.media.documents/document/image%3A2616"}
-  
-  // ImageResizer.createResizedImage(res.uri, 550,800, 'JPEG', 100, 0, undefined, false, { mode, onlyScaleDown })
-  // .then(resizedImage => {
-    
-  //   // this.setState({ resizedImage });
-  // })
-  // .catch(err => {
-  //   console.log(err);
-  //   return Alert.alert(
-  //     'Unable to resize the photo',
-  //     'Check the console for full the error message',
-  //   );
-  // });
-      // console.log('size after');
-        // value.append('vehicle_image[]',res )
-        // console.log(value);
-        img.push(res)
-        // console.log(JSON.stringify(res));
-      }
-  setopener(false)
-    //  imagecompress(results)
-      setEditImages(old => [...old, ...img]);
-  setimg([])
-      // console.log('data is '+img);
-  
-      
-      //Setting the state to show multiple file attributes
-      // let newarray1 = [...EditImages]
-      // let arraytemp = [];
-      // console.log('result i  ::::::::::::::'+results)
-  
-      // for(var o = 0; o <= results.length-1 ; o++){
-      //   // console.log('hi');
-      //   // let element = images[o].path;
-      //   newarray1.push(results[o])
-      // }s
-  
-      // setEditImages(newarray1)
-      
-      // console.log(EditImages.length);
-      
-      // this.setState({ multipleFile: results });
-    } catch (err) {
-      //Handling any exception (If any)
-      if (DocumentPicker.isCancel(err)) {
-        setopener(false)
-
-        //If user canceled the document selection
-        // alert('Canceled from multiple doc picker');
-      } else {
-        setopener(false)
-
-        //For Unknown Error
-        alert('Unknown Error: ' + JSON.stringify(err));
-        throw err;
-      }
-    }
-  
-  
-  };
-  
-
-const chooseFile1 = () =>{
+  const chooseFile1 = () =>{
   ImagePicker.openCamera({
     width: 300,
     height: 400,
@@ -425,11 +529,9 @@ const chooseFile1 = () =>{
 // });
 
 
-}
+  }
 
-
-
-const renderimageslist = ({item, index}) =>{
+  const renderimageslist = ({item, index}) =>{
   if (item.plusImage) {
     return (
 <View style={{flexDirection:'column',alignSelf:'center', marginTop:5, justifyContent:'center',paddingHorizontal:2, width:80 ,height:100}}
@@ -476,9 +578,9 @@ style={{alignSelf:'center'}}>
   
   )
   
-   }
+  }
 
-useEffect(() => {
+  useEffect(() => {
 
 
 
@@ -487,10 +589,10 @@ useEffect(() => {
   return () => {
     value
   }
-}, [])
+  }, [])
 
 
-const callingupdatesimages =() =>{
+  const callingupdatesimages =() =>{
   // data.append('profile_pic',  {uri: fileToUpload1.uri,name: fileToUpload1.name,filename :fileToUpload1.filename,type: fileToUpload1.type});
   setspinner(true)
   console.log('img at fetch is ::::::::::'+img);
@@ -547,40 +649,9 @@ const callingupdatesimages =() =>{
           console.warn(error)
       });
 
-}
+  }
 
-
- const launchCamera = () => {
-  let options = {
-    storageOptions: {
-      skipBackup: true,
-      path: 'images',
-    },
-  };
-  ImagePicker.launchCamera(options, (response) => {
-    console.log('Response = ', response);
-
-    if (response.didCancel) {
-      console.log('User cancelled image picker');
-    } else if (response.error) {
-      console.log('ImagePicker Error: ', response.error);
-    } else if (response.customButton) {
-      console.log('User tapped custom button: ', response.customButton);
-      alert(response.customButton);
-    } else {
-      const source = { uri: response.uri };
-      console.log('response', JSON.stringify(response));
-      this.setState({
-        filePath: response,
-        fileData: response.data,
-        fileUri: response.uri
-      });
-    }
-  });
-
-}
-
-
+ 
 
 
 return (
@@ -611,9 +682,9 @@ return (
               alignItems:'baseline',
               paddingHorizontal:15,
             }}>
-     {/* <TouchableOpacity
-                            onPress={() => openCamera()}
-// onPress={()=> captureImage}
+     <TouchableOpacity
+                            onPress={() => TakePhoto()}
+// onPress={()=> {TakePhoto()}}
                   style={{
                     borderRadius: 10,
                     width:"100%",
@@ -633,15 +704,19 @@ return (
                     }}>
                     Open Camera
                   </Text>
-                </TouchableOpacity> */}
+                </TouchableOpacity>
 
 
                 <TouchableOpacity
           onPress={() =>{
             
             // selectOneFile();
- chooseFile1();
+            if(Platform.OS == 'ios' ){
+                chooseFile()
+            }else{
+              selectFile3();
 
+            }
             // selectFile3()
           }
           }
