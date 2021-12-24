@@ -50,8 +50,19 @@ const FindVehcileCarlist = ({route, navigation }) => {
           const itemData = item.lot_number
             ? item.lot_number.toUpperCase()
             : ''.toUpperCase();
+            const itemData2 = item.vin
+            ? item.vin.toUpperCase()
+            : ''.toUpperCase();
+
           const textData = text.toUpperCase();
+
+          if(itemData.indexOf(textData) > -1){
           return itemData.indexOf(textData) > -1;
+
+          }else{
+          return itemData2.indexOf(textData) > -1;
+        }
+          // return itemData.indexOf(textData) > -1;
       });
       // setcheck(0)
       setFilteredDataSource(newData);
@@ -428,6 +439,8 @@ style={{height:deviceHeight*0.05,paddingHorizontal:30,marginVertical:5, backgrou
           value={search}
           underlineColorAndroid="transparent"
           placeholder="Search by Lot or VIN"
+          placeholderTextColor={AppColors.blue}
+
         />
 </View>
 

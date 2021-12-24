@@ -5,6 +5,7 @@ import {
   ScrollView,
   View,
   Text,
+  TextInput,
   Modal,
   ImageBackground,
   FlatList,
@@ -35,6 +36,8 @@ const Exportlist = ({ route, navigation }) => {
   const [spinner , setspinner] =useState(false)
   const [refreshing, setrefreshing] =useState(true)
   const [data, setdata] = useState([])
+
+  const [FilteredDataSource, setFilteredDataSource] = useState([])
   const[sortmodal , setsortmodal] = useState(false)
 const [location ,setlocation] =useState('Select')
 const [locationindex ,setlocationindex] =useState('0')
@@ -76,9 +79,47 @@ const [locationindex ,setlocationindex] =useState('0')
 
   ]
 )
+const [Search , setSearch] = useState('')
 
 
+const searchFilterFunction = (text) => {
+  // Check if searched text is not blank
+  if (text) {
+    // Inserted text is not blank
+    // Filter the masterDataSource
+    // Update FilteredDataSource
+    const newData = data.filter(
+      function (item) {
+        const itemData = item.booking_number
+          ? item.booking_number.toUpperCase()
+          : ''.toUpperCase();
+          const itemData2 = item.container_number
+          ? item.container_number.toUpperCase()
+          : ''.toUpperCase();
+          const itemData3 = item.ar_number
+          ? item.ar_number.toUpperCase()
+          : ''.toUpperCase();
 
+        const textData = text.toUpperCase();
+
+        if(itemData.indexOf(textData) > -1){
+        return itemData.indexOf(textData) > -1;
+
+        }else if(itemData3.indexOf(textData)){
+        return itemData3.indexOf(textData) > -1;
+      }
+        // return itemData.indexOf(textData) > -1;
+    });
+    // setcheck(0)
+    setFilteredDataSource(newData);
+    setSearch(text);
+  } else {
+    // Inserted text is blank
+    // Update FilteredDataSource with masterDataSource
+    setFilteredDataSource(data);
+    setSearch(text);
+  }
+};
 
 const handleRefresh = () => {
   setspinner(true)
@@ -111,6 +152,7 @@ setrefreshing(true)
               imageBasePath = responseJson.data.other.export_image
               if (responseJson.data.export.length > 0) {
                   if (isFirstTimeCaling) {
+                    setFilteredDataSource(responseJson.data.export)
                     setdata(responseJson.data.export)
                     setspinner(false)
                     console.log('data export is : =-----'+data);
@@ -118,15 +160,19 @@ setrefreshing(true)
                     //  this.setState({ vehicleList: responseJson.data.export, noMoreDataFound: false, isFooterLoading: false })
                   } else {
                 //  this.setState({ vehicleList: this.state.vehicleList.concat(responseJson.data.export), noMoreDataFound: false, isFooterLoading: false })
-                      setdata(responseJson.data.export)
-                      setspinner(false)
+                setFilteredDataSource(responseJson.data.export)
+                setdata(responseJson.data.export)
+                                      setspinner(false)
                     }
               } else {
                   if (isFirstTimeCaling) {
                     setdata('')
+                    setFilteredDataSource('')
                       //this.setState({ vehicleList: [], noMoreDataFound: true, isFooterLoading: false })
                   } else {
                     setdata('')
+                    setFilteredDataSource('')
+
                       //this.setState({ isFooterLoading: false, noMoreDataFound: true })
                   }
               }
@@ -149,7 +195,8 @@ setrefreshing(true)
 
 
     }
-    const sortt =(itemIndex) => {
+
+  const sortt =(itemIndex) => {
       setspinner(true)
       let loct='';
       if(itemIndex == ''){
@@ -196,7 +243,7 @@ setrefreshing(true)
     
         // setdata('')
         // setdata(data)
-      }
+    }
   // (a.location === 'NJ') ? 1 : (a.color === b.color) ? ((a.size > b.size) ? 1 : -1) : -1 )
 
 useEffect(() => {
@@ -462,29 +509,36 @@ onPress={()=>{setsortmodal(true)}}>
 
 </View>
 
+<View
+
+style={{height:deviceHeight*0.05,paddingHorizontal:30,paddingVertical:5,paddingTop:10, backgroundColor:AppColors.blue, justifyContent:'center'}}>
+ <TextInput
+          style={{height: 25,
+    borderWidth: 0.4,
+    paddingLeft: 20,
+    borderRadius:30,
+    fontSize:12,
+    paddingVertical:5,
+    borderColor: '#009688',
+    backgroundColor: '#FFFFFF',}}
+          onChangeText={(text) => searchFilterFunction(text)}
+          value={Search}
+          underlineColorAndroid="transparent"
+          placeholder="Search Container by Booking no,Ar number and Container no."
+          placeholderTextColor={AppColors.blue}
+        />
+</View>
+
+
 <View style={{width:deviceWidth, flex:1, backgroundColor:AppColors.blue}}>
 
-{/* <Picker
-  selectedValue={location}
-  style={{height: 18, width: 45}}
-  onValueChange={(itemValue, itemIndex) =>
-    this.setState({language: itemValue})
-  }>
- <Picker.Item style={{fontSize:12}} label="Select" value="0" />
-  <Picker.Item label="GA" value="1" />
-  <Picker.Item label="NJ" value="2" />
-  <Picker.Item label="TX" value="3" />
-  <Picker.Item label="CA" value="4" />
-</Picker> */}
-
   
-
 <FlatList
                          contentContainerStyle={{ paddingBottom: 50}}
                          contentInsetAdjustmentBehavior="automatic"
-                      data={data}
+                      data={FilteredDataSource}
                      renderItem={renderlist}
-                     extraData={data}
+                     extraData={FilteredDataSource}
                      keyExtractor={(item,index) => index.toString()}
                      refreshing={refreshing}
                      onRefresh={handleRefresh}
